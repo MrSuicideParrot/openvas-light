@@ -1,0 +1,6 @@
+#!/bin/sh
+
+redis-server /etc/redis/redis-openvas.conf &&\
+greenbone-nvt-sync &&\
+ospd-openvas &&\
+tail -f usr/local/var/log/gvm/openvas.log
