@@ -2,5 +2,6 @@
 
 redis-server /etc/redis/redis-openvas.conf &&\
 greenbone-nvt-sync &&\
-ospd-openvas &&\
+gvm-manage-certs -a &&\
+ospd-openvas -p ${PORT} &&\
 tail -f usr/local/var/log/gvm/openvas.log

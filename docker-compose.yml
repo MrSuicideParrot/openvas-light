@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+    openvas:
+        image: cirne/openvas-light
+        build: 
+          context: .
+          args: 
+            OPENVAS_VERSION: 7.0.0
+            VERSION: 1.0
+            GVM_LIBS_VERSION: 11.0.0
+        container_name: openvas
+        volumes:
+            - plugindata:/usr/local/var/lib/openvas/plugins
+            - ./gvm:/usr/var/lib/gvm
+
+    client:
+        image: python
+        container_name: client
+        volumes:
+          - ./gvm:/usr/var/lib/gvm
+        entrypoint: ['/bin/sh','-c','while true; do sleep 600; done']
+
+
+
+volumes:
+  plugindata:
+    driver: local

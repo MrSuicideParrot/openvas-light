@@ -27,7 +27,9 @@ RUN apt-get -y update &&\
         python3-pip \
         redis-server \
         uuid-dev \
-        wget &&\
+        wget \
+        rsync \
+        gnutls-bin &&\
     cd /tmp &&\
     echo "Installing GVM Libraries" &&\
         wget https://github.com/greenbone/gvm-libs/archive/v${GVM_LIBS_VERSION}.tar.gz &&\
@@ -63,8 +65,12 @@ RUN apt-get -y update &&\
 COPY configs/ospd.conf /root/.config/
 COPY scripts/greenbone-nvt-sync /usr/local/bin/
 COPY scripts/start-openvas /usr/local/bin/
+COPY scripts/gvm-manage-certs /usr/local/bin/
 
 VOLUME /usr/local/var/lib/openvas/plugins
+VOLUME /usr/var/lib/gvm
+
+ENV PORT 5149
 
 ENTRYPOINT start-openvas
 
