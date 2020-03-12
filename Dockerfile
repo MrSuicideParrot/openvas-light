@@ -29,6 +29,7 @@ RUN apt-get -y update &&\
         uuid-dev \
         wget \
         rsync \
+	nmap \ 
         gnutls-bin &&\
     cd /tmp &&\
     echo "Installing GVM Libraries" &&\
@@ -73,6 +74,3 @@ VOLUME /usr/var/lib/gvm
 ENV PORT 5149
 
 ENTRYPOINT start-openvas
-
-
-    
