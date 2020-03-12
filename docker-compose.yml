@@ -13,16 +13,7 @@ services:
         volumes:
             - plugindata:/usr/local/var/lib/openvas/plugins
             - ./gvm:/usr/var/lib/gvm
-
-    client:
-        image: python
-        container_name: client
-        volumes:
-          - ./gvm:/usr/var/lib/gvm
-        entrypoint: ['/bin/sh','-c','while true; do sleep 600; done']
-
-
-
+    
 volumes:
   plugindata:
     driver: local
