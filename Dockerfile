@@ -4,6 +4,8 @@ ARG BUILD_DATE
 ARG VERSION
 ARG OPENVAS_VERSION
 ARG GVM_LIBS_VERSION
+ARG GOCROND_VERSION
+ARG ARCH
 
 
 RUN apt-get -y update &&\
@@ -29,7 +31,7 @@ RUN apt-get -y update &&\
         uuid-dev \
         wget \
         rsync \
-	nmap \ 
+	    nmap \ 
         gnutls-bin &&\
     cd /tmp &&\
     echo "Installing GVM Libraries" &&\
@@ -55,6 +57,9 @@ RUN apt-get -y update &&\
         cp openvas-${OPENVAS_VERSION}/config/redis-openvas.conf /etc/redis &&\
         chown redis:redis /etc/redis/redis-openvas.conf &&\
         echo "db_address = /run/redis-openvas/redis.sock" > /usr/local/etc/openvas/openvas.conf &&\
+    echo "Installig go-crond" &&\
+        wget -O /usr/local/bin/go-crond https://github.com/webdevops/go-crond/releases/download/$GOCROND_VERSION/go-crond-$ARCH-linux &&\
+        chmod +x /usr/local/bin/go-crond &&\
     echo "Cleaning environment" &&\
         apt-get -y purge gcc cmake python3-pip &&\
         apt-get -y autoremove &&\
