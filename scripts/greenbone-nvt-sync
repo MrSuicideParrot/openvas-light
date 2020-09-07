@@ -20,7 +20,7 @@
 # This script updates the local Network Vulnerability Tests (NVTs) from the
 # Greenbone Security Feed (GSF) or the Greenbone Community Feed (GCF). 
 
-VERSION=7.0.0
+VERSION=7.0.1
 
 # SETTINGS
 # ========
@@ -72,7 +72,7 @@ PORT=24
 OPENVAS_SYSCONF_DIR="/usr/local/etc/openvas"
 
 # Directory where the feed update lock file will be placed.
-OPENVAS_FEED_LOCK_PATH="/tmp"
+OPENVAS_FEED_LOCK_PATH="/var/run/ospd/feed-update.lock"
 
 # Location of the GSF Access Key
 ACCESS_KEY="/usr/local/etc/gvm/gsf-access-key"
