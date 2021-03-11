@@ -42,10 +42,11 @@ RUN apt-get -y update &&\
         make install &&\
         cd .. &&\
         ldconfig &&\
+        rm v${GVM_LIBS_VERSION}.tar.gz &&\
     echo "Installing OpenVAS scanner" &&\
-        wget https://github.com/greenbone/openvas/archive/v${OPENVAS_VERSION}.tar.gz &&\
-        tar -xvzf v${OPENVAS_VERSION}.tar.gz &&\
-        cd openvas-${OPENVAS_VERSION} &&\
+	wget https://github.com/greenbone/openvas-scanner/archive/v${OPENVAS_VERSION}.tar.gz &&\
+  	tar -xvzf v${OPENVAS_VERSION}.tar.gz &&\
+        cd openvas-scanner-${OPENVAS_VERSION} &&\
         cmake . &&\
         make install &&\
         cd .. &&\  
@@ -54,7 +55,7 @@ RUN apt-get -y update &&\
         pip3 install ospd-openvas &&\
     echo "Configuring redis server" &&\
         mkdir -p /run/redis-openvas &&\
-        cp openvas-${OPENVAS_VERSION}/config/redis-openvas.conf /etc/redis &&\
+        cp openvas-scanner-${OPENVAS_VERSION}/config/redis-openvas.conf /etc/redis &&\
         chown redis:redis /etc/redis/redis-openvas.conf &&\
         echo "db_address = /run/redis-openvas/redis.sock" > /usr/local/etc/openvas/openvas.conf &&\
     echo "Installig go-crond" &&\
