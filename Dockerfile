@@ -9,7 +9,7 @@ ARG ARCH
 
 
 RUN apt-get -y update &&\
-    apt-get install -y \
+    apt-get install -y\
         bison \
         cmake \
         gcc \
@@ -69,6 +69,8 @@ RUN apt-get -y update &&\
             /var/lib/apt/lists/* \
             /var/tmp/*
 
+
+
 COPY configs/ospd.conf /root/.config/
 COPY scripts/greenbone-nvt-sync /usr/local/bin/
 COPY scripts/start-openvas /usr/local/bin/
@@ -78,5 +80,4 @@ VOLUME /usr/local/var/lib/openvas/plugins
 VOLUME /usr/var/lib/gvm
 
 ENV PORT 5149
-
 ENTRYPOINT start-openvas

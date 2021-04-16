@@ -1,9 +1,50 @@
-#!/bin/sh
+#!/bin/bash
 
-redis-server /etc/redis/redis-openvas.conf &&\
+set -e
+
 [ ! -d /usr/var/lib/gvm/CA ] && gvm-manage-certs -a;
 [ -f /var/run/openvas.pid ] && rm /var/run/openvas.pid;
-ospd-openvas -p ${PORT} &
-sleep 20 && greenbone-nvt-sync &&\
-[ -z NOT_CROND ] && go-crond --run-parts-daily=greenbone-nvt-sync &
+
+[ ! -d "/run/redis-openvas" ] && mkdir /run/redis-openvas
+[ -S /run/redis-openvas/redis.sock ] && rm /run/redis-openvas/redis.sock
+redis-server /etc/redis/redis-openvas.conf
+
+echo "Wait for redis socket to be created..."
+while  [ ! -S /run/redis-openvas/redis.sock ]; do
+        sleep 1
+done
+
+echo "Testing redis status..."
+X="$(redis-cli -s /run/redis-openvas/redis.sock ping)"
+while  [ "${X}" != "PONG" ]; do
+        echo "Redis not yet ready..."
+        sleep 1
+        X="$(redis-cli -s /run/redis-openvas/redis.sock ping)"
+done
+echo "Redis ready."
+
+
+mkdir -p /usr/local/share/openvas
+mkdir -p /usr/local/var/lib/openvas/plugins
+
+echo "Updating NVTs..."
+rsync --compress-level=9 --links --times --omit-dir-times --recursive --partial --quiet rsync://feed.community.greenbone.net:/nvt-feed /usr/local/var/lib/openvas/plugins
+[ -z NOT_CROND ] && go-crond --run-parts-daily=greenbone-nvt-sync 
+
+sleep 2
+
+if [ -f /var/run/ospd.pid ]; then
+  rm /var/run/ospd.pid
+fi
+
+if [ -S /data/ospd.sock ]; then
+  rm /data/ospd.sock
+fi
+
+if [ ! -d /var/run/ospd ]; then
+  mkdir /var/run/ospd
+fi
+
+ospd-openvas -p ${PORT}
+
 sleep 30 && tail -f /usr/local/var/log/gvm/openvas.log
